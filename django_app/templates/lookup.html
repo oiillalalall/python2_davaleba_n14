@@ -1,0 +1,202 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineBase | Movie Database</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<header class="navbar">
+    <a href="#" class="logo">CINE<span>BASE</span></a>
+    <nav>
+        <a href="#movies">Movies</a>
+        <a href="#viewers">Viewers</a>
+        <a href="#reviews">Reviews</a>
+    </nav>
+    <div class="status">● Database Connected</div>
+</header>
+
+<section class="hero">
+    <div class="hero-content">
+        <span class="tag">DJANGO ORM PROJECT</span>
+        <h1>Explore the world<br>of <span>cinema.</span></h1>
+        <p>A complete movie database powered by Django ORM lookups. Explore movies, viewers and reviews.</p>
+        <a href="#movies" class="hero-btn">Explore Database ↗</a>
+    </div>
+    <div class="hero-decoration">
+        <div class="big-icon">▶</div>
+        <span>CINEMA DATABASE</span>
+    </div>
+</section>
+
+<main class="container">
+
+    <div class="section-heading" id="movies">
+        <div>
+            <span class="section-label">01 — TEXT LOOKUPS</span>
+            <h2>Movie & Text Search</h2>
+        </div>
+        <span class="section-count">4 QUERIES</span>
+    </div>
+
+    <div class="grid">
+
+        <div class="card">
+            <div class="card-top"><span>01</span><span class="lookup">EXACT</span></div>
+            <h3>Exact Movie</h3>
+            <p>Find a movie with an exact title.</p>
+            {% for movie in movie_exact %}
+                <div class="movie-result featured">
+                    <h4>{{ movie.title }}</h4>
+                    <p>{{ movie.genre }} · {{ movie.duration_minutes }} min</p>
+                    <span class="rating">★ {{ movie.rating }}</span>
+                </div>
+            {% empty %}
+                <p class="empty">No movies found.</p>
+            {% endfor %}
+        </div>
+
+        <div class="card">
+            <div class="card-top"><span>02</span><span class="lookup">CONTAINS</span></div>
+            <h3>Last Name Search</h3>
+            <p>Find viewers by a part of their surname.</p>
+            {% for viewer in viewers_contains_lastname %}
+                <div class="result-row">
+                    <div class="avatar">{{ viewer.first_name|slice:":1" }}</div>
+                    <div><h4>{{ viewer.first_name }} {{ viewer.last_name }}</h4><p>{{ viewer.email }}</p></div>
+                </div>
+            {% empty %}<p class="empty">No viewers found.</p>{% endfor %}
+        </div>
+
+        <div class="card">
+            <div class="card-top"><span>03</span><span class="lookup">STARTSWITH</span></div>
+            <h3>Genre Starts With</h3>
+            <p>Find movies by the beginning of their genre.</p>
+            {% for movie in genre_starts %}
+                <div class="simple-row">{{ movie.title }} <span>{{ movie.genre }}</span></div>
+            {% empty %}<p class="empty">No movies found.</p>{% endfor %}
+        </div>
+
+        <div class="card">
+            <div class="card-top"><span>04</span><span class="lookup">ENDSWITH</span></div>
+            <h3>Email Domain</h3>
+            <p>Find viewers by email domain.</p>
+            {% for viewer in email_ends %}
+                <div class="result-row">
+                    <div class="avatar">{{ viewer.first_name|slice:":1" }}</div>
+                    <div><h4>{{ viewer.first_name }} {{ viewer.last_name }}</h4><p>{{ viewer.email }}</p></div>
+                </div>
+            {% empty %}<p class="empty">No viewers found.</p>{% endfor %}
+        </div>
+
+    </div>
+
+    <div class="section-heading" id="viewers">
+        <div>
+            <span class="section-label">02 — NUMBER LOOKUPS</span>
+            <h2>Statistics & Filters</h2>
+        </div>
+        <span class="section-count">5 QUERIES</span>
+    </div>
+
+    <div class="grid">
+
+        <div class="card">
+            <div class="card-top"><span>05</span><span class="lookup">GT</span></div>
+            <h3>Long Movies</h3>
+            <p>Movies longer than 120 minutes.</p>
+            {% for movie in long_movies %}
+                <div class="simple-row">{{ movie.title }} <span>{{ movie.duration_minutes }} min</span></div>
+            {% empty %}<p class="empty">No movies found.</p>{% endfor %}
+        </div>
+
+        <div class="card">
+            <div class="card-top"><span>06</span><span class="lookup">GTE</span></div>
+            <h3>High Score Reviews</h3>
+            <p>Reviews with a score of 8 or higher.</p>
+            {% for review in high_score_reviews %}
+                <div class="review-row">
+                    <div><h4>{{ review.movie.title }}</h4><p>{% if review.viewer %}{{ review.viewer.first_name }} {{ review.viewer.last_name }}{% else %}Anonymous{% endif %}</p></div>
+                    <span class="score">{{ review.score }}/10</span>
+                </div>
+            {% empty %}<p class="empty">No reviews found.</p>{% endfor %}
+        </div>
+
+        <div class="card">
+            <div class="card-top"><span>07</span><span class="lookup">LT</span></div>
+            <h3>Low Rated Movies</h3>
+            <p>Movies with a rating below 5.</p>
+            {% for movie in low_rating_movies %}
+                <div class="simple-row">{{ movie.title }} <span class="bad-rating">{{ movie.rating }} ★</span></div>
+            {% empty %}<p class="empty">No movies found.</p>{% endfor %}
+        </div>
+
+        <div class="card">
+            <div class="card-top"><span>08</span><span class="lookup">LTE</span></div>
+            <h3>Young Viewers</h3>
+            <p>Viewers aged 18 or younger.</p>
+            {% for viewer in young_viewers %}
+                <div class="simple-row">{{ viewer.first_name }} {{ viewer.last_name }} <span>{{ viewer.age }} years</span></div>
+            {% empty %}<p class="empty">No viewers found.</p>{% endfor %}
+        </div>
+
+        <div class="card">
+            <div class="card-top"><span>09</span><span class="lookup">RANGE</span></div>
+            <h3>Medium Length Movies</h3>
+            <p>Movies between 90 and 150 minutes.</p>
+            {% for movie in medium_length_movies %}
+                <div class="simple-row">{{ movie.title }} <span>{{ movie.duration_minutes }} min</span></div>
+            {% empty %}<p class="empty">No movies found.</p>{% endfor %}
+        </div>
+
+    </div>
+
+    <div class="section-heading" id="reviews">
+        <div>
+            <span class="section-label">03 — OTHER LOOKUPS</span>
+            <h2>Advanced Queries</h2>
+        </div>
+        <span class="section-count">2 QUERIES</span>
+    </div>
+
+    <div class="grid">
+
+        <div class="card">
+            <div class="card-top"><span>10</span><span class="lookup">IN</span></div>
+            <h3>Movies In List</h3>
+            <p>Movies with IDs included in a specific list.</p>
+            {% for movie in movies_in_list %}
+                <div class="simple-row">{{ movie.title }} <span>#{{ movie.id }}</span></div>
+            {% empty %}<p class="empty">No movies found.</p>{% endfor %}
+        </div>
+
+        <div class="card">
+            <div class="card-top"><span>11</span><span class="lookup">ISNULL</span></div>
+            <h3>Anonymous Reviews</h3>
+            <p>Reviews without an assigned viewer.</p>
+            {% for review in reviews_without_viewer %}
+                <div class="review-row">
+                    <div><h4>{{ review.movie.title }}</h4><p>Anonymous viewer</p></div>
+                    <span class="score">{{ review.score }}/10</span>
+                </div>
+            {% empty %}<p class="empty">No reviews found.</p>{% endfor %}
+        </div>
+
+    </div>
+
+</main>
+
+<footer>
+    <a href="#" class="logo">CINE<span>BASE</span></a>
+    <p>Built with Django · Powered by ORM</p>
+    <span>© 2026 CineBase</span>
+</footer>
+
+</body>
+</html>
